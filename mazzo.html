@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Mazzo · Tarkyn</title>
+<meta name="description" content="Un mazzo Commander condiviso da Tarkyn.">
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="stile.css">
+<style>
+  main { max-width: 880px; }
+  .hero { display: grid; grid-template-columns: minmax(0, 260px) 1fr; gap: 32px; align-items: end; margin-bottom: 32px; }
+  .comandanti { position: relative; }
+  .comandanti img { width: 100%; aspect-ratio: 488 / 680; border-radius: 4.75% / 3.5%; display: block; background: var(--superficie);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .55), 0 0 60px var(--alone, rgba(79, 141, 255, .25)); transition: transform .4s ease; }
+  .comandanti img + img { position: absolute; width: 62%; right: -18%; bottom: -10%; transform: rotate(6deg); }
+  .occhiello { color: var(--blu); font: 700 13px/1 -apple-system, sans-serif; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 10px; }
+  .hero h1 { margin-bottom: 6px; overflow-wrap: anywhere; }
+  .chi { color: var(--avorio); font-size: 19px; margin: 0 0 16px; }
+  .pillole { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; padding: 0; list-style: none; }
+  .pillole li { margin: 0; padding: 6px 12px; border-radius: 999px; background: var(--superficie); border: 1px solid rgba(244, 238, 220, .1); font-size: 14px; color: var(--avorio); display: inline-flex; gap: 6px; align-items: center; }
+  .punti { display: inline-flex; gap: 3px; }
+  .punti i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .azioni { display: flex; flex-wrap: wrap; gap: 10px; }
+  .azioni button, .azioni a { font: 600 16px/1 -apple-system, sans-serif; padding: 14px 22px; border-radius: 999px; border: 0; cursor: pointer; text-decoration: none; white-space: nowrap; }
+  .primario { background: var(--avorio); color: #14141B; }
+  .secondario { background: var(--superficie); color: var(--avorio); border: 1px solid rgba(244, 238, 220, .14) !important; }
+  .fatto { color: #2FD27A; font-size: 15px; align-self: center; }
+  .curva { background: var(--superficie); border: 1px solid rgba(244, 238, 220, .1); border-radius: 24px; padding: 18px 20px 12px; margin: 0 0 32px; }
+  .curva h2 { margin: 0 0 12px; font-size: 17px; }
+  .barre { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; align-items: end; height: 110px; }
+  .barra { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 4px; font-size: 12px; color: var(--tenue); }
+  .barra b { color: var(--avorio); font-weight: 600; }
+  .barra span { width: 100%; max-width: 44px; border-radius: 8px 8px 3px 3px; background: linear-gradient(var(--blu), rgba(79, 141, 255, .45)); min-height: 3px; }
+  .gruppi { columns: 2 340px; column-gap: 32px; }
+  .gruppo { break-inside: avoid; margin: 0 0 28px; }
+  .gruppo h2 { margin: 0 0 6px; font-size: 17px; display: flex; justify-content: space-between; }
+  .gruppo h2 small { color: var(--tenue); font-weight: 500; }
+  .gruppo ul { list-style: none; padding: 0; margin: 0; }
+  .gruppo li { margin: 0; display: grid; grid-template-columns: 26px 1fr auto; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(244, 238, 220, .06); }
+  .gruppo li button { all: unset; cursor: pointer; color: var(--avorio); overflow-wrap: anywhere; }
+  .gruppo li button:hover, .gruppo li button:focus-visible { color: var(--blu); }
+  .q { color: var(--tenue); font-variant-numeric: tabular-nums; }
+  .costo { display: inline-flex; gap: 2px; }
+  .costo i { width: 15px; height: 15px; border-radius: 50%; font: 700 9px/15px -apple-system, sans-serif; text-align: center; font-style: normal; color: #14141B; background: #CFC8B6; }
+  .anteprima { position: fixed; inset: 0; background: rgba(5, 5, 8, .78); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 10; backdrop-filter: blur(6px); }
+  .anteprima.aperta { display: flex; }
+  .anteprima img { max-width: min(380px, 100%); max-height: 86vh; border-radius: 4.75% / 3.5%; box-shadow: 0 30px 80px rgba(0, 0, 0, .7); }
+  .stato { text-align: center; padding: 80px 0; }
+  .stato h1 { margin-bottom: 12px; }
+  @media (max-width: 620px) {
+    .hero { grid-template-columns: 1fr; gap: 24px; }
+    .comandanti { width: min(240px, 66vw); margin: 0 auto; }
+    .hero > div:last-child { text-align: center; }
+    .pillole, .azioni { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <svg viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="t" x1="60" y1="14" x2="60" y2="76" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#F4EEDC"/><stop offset=".375" stop-color="#4F8DFF"/><stop offset="1" stop-color="#4F8DFF" stop-opacity="0"/></linearGradient></defs><g transform="translate(-8 8) rotate(35 60 66)"><path d="M51.5 18Q60 15 68.5 18L60 76Z" fill="url(#t)"/><circle cx="60" cy="17" r="15" fill="#FFFDF6" fill-opacity=".14"/><circle cx="60" cy="17" r="8.5" fill="#FFFDF6"/></g><path d="M30 27L31.96 32.04L37 34L31.96 35.96L30 41L28.04 35.96L23 34L28.04 32.04Z" fill="#F4EEDC" fill-opacity=".75"/></svg>
+  <a href="./">Tarkyn</a>
+</header>
+<div id="contenuto"><p class="stato" id="caricamento"></p></div>
+<footer id="piede"></footer>
+</main>
+<div class="anteprima" id="anteprima" role="dialog" aria-modal="true"><img alt=""></div>
+<script>
+(() => {
+  const SUPA = { url: 'https://yxtmbnbyxlhxgdmqcqsd.supabase.co/rest/v1/rpc/shared_deck', key: 'sb_publishable_RD2QDIwoy5gZ8WLfhag2tQ_oLxZ_M3_' };
+  const EN = !/^it\b/i.test(navigator.language || 'it');
+  document.documentElement.lang = EN ? 'en' : 'it';
+  const L = EN ? {
+    loading: 'Opening the deck…', eyebrow: 'Commander deck', led: 'Led by', cards: (n) => `${n} cards`, bracket: (n) => `Bracket ${n}`,
+    updated: 'Updated', copy: 'Copy the list', copied: 'Copied: paste it wherever you play.', curve: 'Mana curve',
+    groups: { commander: 'Commander', creature: 'Creatures', planeswalker: 'Planeswalkers', battle: 'Battles', instant: 'Instants', sorcery: 'Sorceries', artifact: 'Artifacts', enchantment: 'Enchantments', land: 'Lands', other: 'Other' },
+    goneTitle: 'This link no longer works', goneText: 'Whoever shared the deck may have removed it.', errTitle: 'The deck didn’t load', errText: 'Check your connection and try again.', retry: 'Try again',
+    made: 'Made with Tarkyn, the app for building Commander decks.', home: 'Discover Tarkyn',
+    credits: 'Card images and data via Scryfall. Tarkyn is unofficial Fan Content permitted under the Fan Content Policy. Not approved/endorsed by Wizards. Portions of the materials used are property of Wizards of the Coast. ©Wizards of the Coast LLC.'
+  } : {
+    loading: 'Sto aprendo il mazzo…', eyebrow: 'Mazzo Commander', led: 'Guidato da', cards: (n) => `${n} carte`, bracket: (n) => `Bracket ${n}`,
+    updated: 'Aggiornato il', copy: 'Copia la lista', copied: 'Copiata: incollala dove giochi.', curve: 'Curva di mana',
+    groups: { commander: 'Comandante', creature: 'Creature', planeswalker: 'Planeswalker', battle: 'Battaglie', instant: 'Istantanei', sorcery: 'Stregonerie', artifact: 'Artefatti', enchantment: 'Incantesimi', land: 'Terre', other: 'Altro' },
+    goneTitle: 'Questo link non funziona più', goneText: 'Forse chi ha condiviso il mazzo l’ha tolto.', errTitle: 'Il mazzo non si è aperto', errText: 'Controlla la connessione e riprova.', retry: 'Riprova',
+    made: 'Fatto con Tarkyn, l’app per costruire mazzi Commander.', home: 'Scopri Tarkyn',
+    credits: 'Immagini e dati delle carte tramite Scryfall. Tarkyn is unofficial Fan Content permitted under the Fan Content Policy. Not approved/endorsed by Wizards. Portions of the materials used are property of Wizards of the Coast. ©Wizards of the Coast LLC.'
+  };
+  const COLORS = { W: '#F4EEDC', U: '#4F8DFF', B: '#A06BFF', R: '#FF5A3C', G: '#2FD27A' };
+  const ORDER = ['creature', 'planeswalker', 'battle', 'instant', 'sorcery', 'artifact', 'enchantment', 'land', 'other'];
+  const box = document.getElementById('contenuto');
+  document.getElementById('piede').textContent = L.credits;
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const img = (c) => c.img || `https://api.scryfall.com/cards/named?exact=${encodeURIComponent(c.n)}&format=image&version=normal`;
+
+  function group(t) {
+    const s = String(t || '').toLowerCase().split('//')[0];
+    if (s.includes('land') && !s.includes('creature')) return 'land';
+    for (const g of ['creature', 'planeswalker', 'battle', 'instant', 'sorcery', 'artifact', 'enchantment']) if (s.includes(g)) return g;
+    return 'other';
+  }
+  function cost(m) {
+    const parts = String(m || '').split('//')[0].match(/\{[^}]+\}/g) || [];
+    return parts.map((p) => {
+      const s = p.slice(1, -1).toUpperCase();
+      const one = s.split('/').find((x) => COLORS[x]);
+      return `<i style="background:${one ? COLORS[one] : '#CFC8B6'}">${esc(one && s.length === 1 ? '' : s.replace('/P', '').slice(0, 2))}</i>`;
+    }).join('');
+  }
+  function listText(d) {
+    const cmd = d.cards.filter((c) => c.c), rest = d.cards.filter((c) => !c.c);
+    return ['Commander', ...cmd.map((c) => `${c.q || 1} ${c.n}`), '', 'Deck', ...rest.map((c) => `${c.q || 1} ${c.n}`)].join('\n');
+  }
+
+  function render(d) {
+    const cards = Array.isArray(d.cards) ? d.cards : [];
+    const commanders = cards.filter((c) => c.c);
+    const total = cards.reduce((a, c) => a + (c.q || 1), 0);
+    const colors = String(d.colors || '').split('').filter((x) => COLORS[x]);
+    document.title = `${d.name || L.eyebrow} · Tarkyn`;
+    if (colors.length) document.documentElement.style.setProperty('--alone', COLORS[colors[0]] + '55');
+    const groups = {};
+    for (const c of cards.filter((c) => !c.c)) (groups[group(c.t)] ||= []).push(c);
+    const curve = Array(8).fill(0);
+    for (const c of cards) if (!c.c && group(c.t) !== 'land') curve[Math.min(7, Math.max(0, Math.round(c.mv || 0)))] += c.q || 1;
+    const top = Math.max(1, ...curve);
+    const updated = d.updated ? new Date(d.updated).toLocaleDateString(EN ? 'en-GB' : 'it-IT', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+    let i = 0;
+    const all = [];
+    const row = (c) => { all.push(c); return `<li><span class="q">${c.q || 1}</span><button data-i="${i++}">${esc(c.n)}</button><span class="costo">${cost(c.m)}</span></li>`; };
+    box.innerHTML = `
+      <section class="hero">
+        <div class="comandanti">${commanders.slice(0, 2).map((c) => { all.push(c); return `<img src="${esc(img(c))}" alt="${esc(c.n)}" data-i="${i++}" loading="eager">`; }).join('')}</div>
+        <div>
+          <p class="occhiello">${L.eyebrow}</p>
+          <h1>${esc(d.name || '')}</h1>
+          ${commanders.length ? `<p class="chi">${L.led} ${commanders.map((c) => esc(c.n)).join(' + ')}</p>` : ''}
+          <ul class="pillole">
+            ${colors.length ? `<li><span class="punti">${colors.map((x) => `<i style="background:${COLORS[x]}"></i>`).join('')}</span></li>` : ''}
+            <li>${L.cards(total)}</li>
+            ${d.bracket ? `<li>${L.bracket(d.bracket)}</li>` : ''}
+            ${updated ? `<li>${L.updated} ${updated}</li>` : ''}
+          </ul>
+          <div class="azioni"><button class="primario" id="copia">${L.copy}</button><span class="fatto" id="copiata" hidden>${L.copied}</span></div>
+        </div>
+      </section>
+      <section class="curva" aria-label="${L.curve}"><h2>${L.curve}</h2>
+        <div class="barre">${curve.map((n, k) => `<div class="barra"><b>${n || ''}</b><span style="height:${(n / top) * 78}%"></span>${k === 7 ? '7+' : k}</div>`).join('')}</div>
+      </section>
+      <section class="gruppi">${ORDER.filter((g) => groups[g]).map((g) => `
+        <div class="gruppo"><h2>${L.groups[g]} <small>${groups[g].reduce((a, c) => a + (c.q || 1), 0)}</small></h2>
+          <ul>${groups[g].sort((a, b) => (a.mv || 0) - (b.mv || 0) || a.n.localeCompare(b.n)).map(row).join('')}</ul></div>`).join('')}
+      </section>
+      <p class="nota">${L.made} <a href="./">${L.home}</a></p>`;
+    document.getElementById('copia').onclick = async () => {
+      try { await navigator.clipboard.writeText(listText(d)); document.getElementById('copiata').hidden = false; } catch {}
+    };
+    const prev = document.getElementById('anteprima');
+    box.addEventListener('click', (e) => {
+      const t = e.target.closest('[data-i]'); if (!t) return;
+      const c = all[+t.dataset.i]; prev.querySelector('img').removeAttribute('src'); prev.querySelector('img').src = img(c); prev.querySelector('img').alt = c.n; prev.classList.add('aperta');
+    });
+    prev.onclick = () => prev.classList.remove('aperta');
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') prev.classList.remove('aperta'); });
+  }
+
+  function message(title, text, retry) {
+    box.innerHTML = `<div class="stato"><h1>${title}</h1><p>${text}</p>${retry ? `<div class="azioni" style="justify-content:center"><button class="primario" id="riprova">${L.retry}</button></div>` : `<div class="azioni" style="justify-content:center"><a class="secondario" href="./">${L.home}</a></div>`}</div>`;
+    if (retry) document.getElementById('riprova').onclick = load;
+  }
+
+  async function load() {
+    const id = location.hash.replace(/^#/, '').trim();
+    box.innerHTML = `<p class="stato">${L.loading}</p>`;
+    if (!/^[A-Za-z0-9]{6,20}$/.test(id)) return message(L.goneTitle, L.goneText, false);
+    try {
+      const r = await fetch(SUPA.url, { method: 'POST', headers: { apikey: SUPA.key, 'Content-Type': 'application/json' }, body: JSON.stringify({ p_id: id }) });
+      if (!r.ok) throw new Error(r.status);
+      const d = await r.json();
+      if (!d || !Array.isArray(d.cards)) return message(L.goneTitle, L.goneText, false);
+      render(d);
+    } catch { message(L.errTitle, L.errText, true); }
+  }
+  window.addEventListener('hashchange', load);
+  load();
+})();
+</script>
+</body>
+</html>
